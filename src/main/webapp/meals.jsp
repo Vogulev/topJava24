@@ -9,12 +9,15 @@
 <h3><a href="index.html">Home</a></h3>
 <hr>
 <h2>Meals</h2>
+<p><a href="editMeal.jsp">Add Meal</a></p>
 <jsp:useBean id="mealsTos" scope="request" type="java.util.List"/>
 <table>
     <tr>
         <th>Date</th>
         <th>Description</th>
         <th>Calories</th>
+        <th></th>
+        <th></th>
     </tr>
     <c:forEach var="mealTo" items="${mealsTos}">
         <jsp:useBean id="mealTo" type="ru.javawebinar.topjava.model.MealTo"/>
@@ -27,6 +30,8 @@
             <td>${mealTo.formattedDateTime}</td>
             <td>${mealTo.description}</td>
             <td>${mealTo.calories}</td>
+            <td><a href="${pageContext.request.contextPath}/meals?action=edit&id=${mealTo.id}">Update</a></td>
+            <td><a href="${pageContext.request.contextPath}/meals?action=delete&id=${mealTo.id}">Delete</a></td>
         </tr>
     </c:forEach>
 </table>
