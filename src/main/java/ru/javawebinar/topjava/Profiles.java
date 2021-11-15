@@ -4,7 +4,8 @@ import org.springframework.util.ClassUtils;
 
 public class Profiles {
     public static final String
-            JDBC = "jdbc",
+            JDBCHSQLDB = "jdbcHsqldb",
+            JDBCPOSTGRES = "jdbcPostgres",
             JPA = "jpa",
             DATAJPA = "datajpa";
 
@@ -20,6 +21,16 @@ public class Profiles {
             return POSTGRES_DB;
         } else if (ClassUtils.isPresent("org.hsqldb.jdbcDriver", null)) {
             return HSQL_DB;
+        } else {
+            throw new IllegalStateException("Could not find DB driver");
+        }
+    }
+
+    public static String getJdbcProfile() {
+        if (ClassUtils.isPresent("org.postgresql.Driver", null)) {
+            return JDBCPOSTGRES;
+        } else if (ClassUtils.isPresent("org.hsqldb.jdbcDriver", null)) {
+            return JDBCHSQLDB;
         } else {
             throw new IllegalStateException("Could not find DB driver");
         }
