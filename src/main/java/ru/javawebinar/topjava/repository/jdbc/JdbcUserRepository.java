@@ -17,6 +17,7 @@ import ru.javawebinar.topjava.repository.UserRepository;
 
 import java.util.*;
 
+import static java.util.Objects.nonNull;
 import static ru.javawebinar.topjava.web.ValidationUtil.validate;
 
 @Repository
@@ -70,7 +71,7 @@ public class JdbcUserRepository implements UserRepository {
     public User get(int id) {
         List<User> users = jdbcTemplate.query("SELECT * FROM users WHERE id=?", ROW_MAPPER, id);
         User user = DataAccessUtils.singleResult(users);
-        if (Objects.nonNull(user)) {
+        if (nonNull(user)) {
             setRoles(user);
         }
         return user;
@@ -80,7 +81,7 @@ public class JdbcUserRepository implements UserRepository {
     public User getByEmail(String email) {
         List<User> users = jdbcTemplate.query("SELECT * FROM users WHERE email=?", ROW_MAPPER, email);
         User user = DataAccessUtils.singleResult(users);
-        if (Objects.nonNull(user)) {
+        if (nonNull(user)) {
             setRoles(user);
         }
         return user;
@@ -102,7 +103,7 @@ public class JdbcUserRepository implements UserRepository {
                     }
                     return mapRet;
                 });
-        if (Objects.nonNull(roles) && !roles.isEmpty()) {
+        if (nonNull(roles) && !roles.isEmpty()) {
             for (User u : users) {
                 u.setRoles(roles.get(u.getId()));
             }
