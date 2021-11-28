@@ -1,6 +1,5 @@
 package ru.javawebinar.topjava.web.meal;
 
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -8,11 +7,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealTo;
+import ru.javawebinar.topjava.util.StringToLocalDateConverter;
+import ru.javawebinar.topjava.util.StringToLocalTimeConverter;
 
 import java.net.URI;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -55,13 +53,14 @@ public class MealRestController extends AbstractMealController {
         super.update(meal, id);
     }
 
-    @GetMapping("/{startDateTime}/{endDateTime}")
-    public List<MealTo> getBetweenDateTime(@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTime,
-                                   @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDateTime) {
-        LocalDate startDate = startDateTime.toLocalDate();
-        LocalTime startTime = startDateTime.toLocalTime();
-        LocalDate endDate = endDateTime.toLocalDate();
-        LocalTime endTime =endDateTime.toLocalTime();
-        return super.getBetween(startDate, startTime, endDate, endTime);
+    @GetMapping("/{startDate}/{startTime}/{endDate}/{endTime}")
+    public List<MealTo> getBetweenDateTime(@PathVariable String startDate,
+                                           @PathVariable String startTime,
+                                           @PathVariable String endDate,
+                                           @PathVariable String endTime) {
+        StringToLocalDateConverter dateConverter = new StringToLocalDateConverter();
+        StringToLocalTimeConverter timeConverter = new StringToLocalTimeConverter();
+        return super.getBetween(dateConverter.convert(startDate), timeConverter.convert(startTime),
+                dateConverter.convert(endDate), timeConverter.convert(endTime));
     }
 }

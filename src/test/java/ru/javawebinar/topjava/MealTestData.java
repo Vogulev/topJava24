@@ -3,6 +3,8 @@ package ru.javawebinar.topjava;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealTo;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.Month;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -16,8 +18,10 @@ public class MealTestData {
     public static final MatcherFactory.Matcher<Meal> MEAL_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Meal.class, "user");
     public static final MatcherFactory.Matcher<MealTo> MEALTO_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(MealTo.class, "user");
 
-    public static final String START_DATE_TIME = "2020-01-29T12:15:30";
-    public static final String END_DATE_TIME = "2020-01-31T19:15:30";
+    public static final LocalDate START_DATE = LocalDate.parse("2020-01-30");
+    public static final LocalTime START_TIME = LocalTime.parse("12:15:30");
+    public static final LocalDate END_DATE = LocalDate.parse("2020-01-31");
+    public static final LocalTime END_TIME =  LocalTime.parse("19:15:30");
     public static final int NOT_FOUND = 10;
     public static final int MEAL1_ID = START_SEQ + 2;
     public static final int ADMIN_MEAL_ID = START_SEQ + 9;

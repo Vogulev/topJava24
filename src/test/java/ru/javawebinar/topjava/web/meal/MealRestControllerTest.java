@@ -14,7 +14,6 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 import ru.javawebinar.topjava.web.AbstractControllerTest;
 import ru.javawebinar.topjava.web.json.JsonUtil;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -84,17 +83,27 @@ class MealRestControllerTest extends AbstractControllerTest {
 
     @Test
     void getBetweenDateTime() throws Exception {
-        LocalDateTime startDateTime = LocalDateTime.parse(START_DATE_TIME);
-        LocalDateTime endDateTime = LocalDateTime.parse(END_DATE_TIME);
-
-        List<Meal> mealsFilteredByDate = mealService.getBetweenInclusive(
-                startDateTime.toLocalDate(), endDateTime.toLocalDate(), USER_ID);
+        List<Meal> mealsFilteredByDate = mealService.getBetweenInclusive(START_DATE, END_DATE, USER_ID);
 
         List<MealTo> mealsToFilteredByTime = MealsUtil.getFilteredTos(
-                mealsFilteredByDate, MealsUtil.DEFAULT_CALORIES_PER_DAY,
-                startDateTime.toLocalTime(), endDateTime.toLocalTime());
+                mealsFilteredByDate, MealsUtil.DEFAULT_CALORIES_PER_DAY, START_TIME, END_TIME);
 
-        perform(MockMvcRequestBuilders.get(REST_URL + START_DATE_TIME + "/" + END_DATE_TIME))
+        perform(MockMvcRequestBuilders.get(
+                REST_URL + START_DATE + "/" + START_TIME + "/" + END_DATE + "/" + END_TIME))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(MEALTO_MATCHER.contentJson(mealsToFilteredByTime));
+    }
+
+    @Test
+    void getBetweenDateTimeWithNull() throws Exception {
+        List<Meal> mealsFilteredByDate = mealService.getBetweenInclusive(START_DATE, null, USER_ID);
+
+        List<MealTo> mealsToFilteredByTime = MealsUtil.getFilteredTos(
+                mealsFilteredByDate, MealsUtil.DEFAULT_CALORIES_PER_DAY, null, END_TIME);
+
+        perform(MockMvcRequestBuilders.get(
+                REST_URL + START_DATE + "/" + null + "/" + null + "/" + END_TIME))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(MEALTO_MATCHER.contentJson(mealsToFilteredByTime));
